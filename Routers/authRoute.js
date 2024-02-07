@@ -14,4 +14,17 @@ route.post("/signUp",async (req,res)=>{
     res.status(200).json(userData);
 })
 
+//check if username exist
+route.post("/checkUserName" , async (req,res)=>{
+    const userData = await user.findOne({userName:req.body.userName})
+    if(userData){
+        console.log(userData)
+        res.status(200).json(userData)
+    }
+    else{
+        res.status(400).json({userData:false})
+      
+    }
+})
+
 module.exports = route;
