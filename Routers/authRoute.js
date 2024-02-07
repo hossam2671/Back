@@ -22,8 +22,7 @@ route.post("/checkUserName" , async (req,res)=>{
         res.status(200).json(userData)
     }
     else{
-        res.status(400).json({userData:false})
-      
+        res.status(400).json({userData:false})   
     }
 })
 

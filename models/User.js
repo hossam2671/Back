@@ -36,7 +36,7 @@ const userSchema = mongoose.Schema(
           ref: "user",
         },
       ],
-    follweing: [
+    follwing: [
         {
           type: mongoose.Schema.Types.ObjectId,
           ref: "user",
