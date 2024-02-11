@@ -23,8 +23,14 @@ const userSchema = mongoose.Schema(
         ref: "post",
       },
     ],
+    saved: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "post",
+      },
+    ],
     joinedAt:Date,
-    img:String,
+    img:{type: String, default:"default.png"},
     bio:String,
     gender:{
         type:String,

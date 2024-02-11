@@ -17,6 +17,9 @@ app.use(express.urlencoded({ extended: true }));
 const authRoute = require("./Routers/authRoute");
 app.use("/auth", authRoute);
 
+const userRoute = require("./Routers/userRoute");
+app.use("/user", userRoute);
+
 server.listen(5000, function () {
   console.log("listen");
 });
