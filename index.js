@@ -9,7 +9,7 @@ app.get("/", function (req, res) {
   res.send("Welcome");
 });
 
-app.use(express.static("images"));
+app.use(express.static("upload"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
