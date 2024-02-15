@@ -46,6 +46,13 @@ route.put("/follow",async (req,res)=>{
     res.status(200).json(follwing)
 })
 
+//unfollow
+route.put("/unfollow",async (req,res)=>{
+    const follower = await user.findByIdAndUpdate(req.body.following,{$pull:{follwing:req.body.follower}})
+    const follwing = await user.findByIdAndUpdate(req.body.follower,{$pull:{follwers:req.body.following}})
+    res.status(200).json(follwing)
+})
+
 // add post
 route.post("/addPost", upload.single('img'),async (req,res)=>{
     // const {user,content} = req.body
@@ -67,6 +74,26 @@ route.get("/getPost" , async(req,res)=>{
   const postObjects = await Promise.all(allPosts.map(postId => post.findById(postId)));
   postObjects.sort((b , a) => new Date(a.date) - new Date(b.date));
   res.status(200).json(postObjects)
+})
+
+// get one post
+route.get("/getOnePost",async (req,res)=>{
+  const postData = await post.findById(req.query.post)
+  res.status(200).json(postData)
+})
+
+//like
+route.put("/like",async (req,res)=>{
+  const {user} = req.body
+  const postData = await post.findByIdAndUpdate(req.body.post,{$push:{likes:user}})
+  res.status(200).json(postData)
+})
+
+//unlike
+route.put("/unlike",async (req,res)=>{
+  const {user} = req.body
+  const postData = await post.findByIdAndUpdate(req.body.post,{$pull:{likes:user}})
+  res.status(200).json(postData)
 })
 
 module.exports = route;
