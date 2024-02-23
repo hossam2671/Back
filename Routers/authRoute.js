@@ -11,7 +11,8 @@ route.post("/signUp",async (req,res)=>{
         name:name,
         userName:userName,
         email:email,
-        password:hashedPassword
+        password:hashedPassword,
+        joinedAt:new Date()
     })
     res.status(200).json(userData);
 })

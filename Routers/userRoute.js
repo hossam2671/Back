@@ -2,6 +2,8 @@ const express = require("express");
 const route = express.Router();
 const user = require("../models/User");
 const post = require("../models/Post");
+const comment = require("../models/comment");
+const reply = require("../models/Reply");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors")
@@ -41,15 +43,16 @@ route.get("/getSuggested" , async (req,res)=>{
 
 //follow
 route.put("/follow",async (req,res)=>{
-    const follower = await user.findByIdAndUpdate(req.body.following,{$push:{follwing:req.body.follower}})
-    const follwing = await user.findByIdAndUpdate(req.body.follower,{$push:{follwers:req.body.following}})
+    const follower = await user.findByIdAndUpdate(req.body.following,{$push:{follwers:req.body.follower}})
+    const follwing = await user.findByIdAndUpdate(req.body.follower,{$push:{follwing:req.body.following}})
     res.status(200).json(follwing)
 })
 
 //unfollow
 route.put("/unfollow",async (req,res)=>{
-    const follower = await user.findByIdAndUpdate(req.body.following,{$pull:{follwing:req.body.follower}})
-    const follwing = await user.findByIdAndUpdate(req.body.follower,{$pull:{follwers:req.body.following}})
+  console.log(req.body)
+    const follower = await user.findByIdAndUpdate(req.body.following,{$pull:{follwers:req.body.follower}})
+    const follwing = await user.findByIdAndUpdate(req.body.follower,{$pull:{follwing:req.body.following}})
     res.status(200).json(follwing)
 })
 
@@ -96,4 +99,68 @@ route.put("/unlike",async (req,res)=>{
   res.status(200).json(postData)
 })
 
+//Add Comment
+route.post("/addComment",async (req,res)=>{
+  const CommentData = await comment.create({
+    post:req.body.post,
+    content:req.body.content,
+    user:req.body.user,
+    date:new Date()
+  })
+  const postData = await post.findByIdAndUpdate(req.body.post,{$push:{comments:CommentData._id}})
+  res.status(200).json(postData)
+})
+
+// get Comment 
+route.get("/getComment", async (req,res)=>{
+  const commentData = await comment.findById(req.query.comment).populate("user")
+  res.status(200).json(commentData)
+})
+
+// like Comment
+route.put("/likeComment",async (req,res)=>{
+  const {user} = req.body
+  const postData = await comment.findByIdAndUpdate(req.body.comment,{$push:{likes:user}})
+  res.status(200).json(postData)
+})
+
+// unlike Comment
+route.put("/unlikeComment",async (req,res)=>{
+  const {user} = req.body
+  const postData = await comment.findByIdAndUpdate(req.body.comment,{$pull:{likes:user}})
+  res.status(200).json(postData)
+})
+
+// add reply
+route.post("/addReply",async (req,res)=>{
+  const replyData = await reply.create({
+    comment:req.body.comment,
+    content:req.body.content,
+    user:req.body.user,
+    date:new Date()
+  })
+  const commentData = await comment.findByIdAndUpdate(req.body.comment,{$push:{replies:replyData._id}})
+  res.status(200).json(commentData)
+})
+
+// save post
+route.put("/save",async (req,res)=>{
+  const userData = await user.findByIdAndUpdate(req.body.user,{$push:{saved:req.body.post}})
+  res.status(200).json(userData)
+})
+// unsave post
+route.put("/unsave",async (req,res)=>{
+  const userData = await user.findByIdAndUpdate(req.body.user,{$pull:{saved:req.body.post}})
+  res.status(200).json(userData)
+})
+//get All Post
+route.get("/explore", async (req,res)=>{
+  const postData = await post.find({})
+  postData.sort((a, b) => {
+    const sumA = a.likes.length + a.comments.length;
+    const sumB = b.likes.length + b.comments.length;
+    return sumB - sumA
+  });
+  res.status(200).json(postData)
+})
 module.exports = route;
