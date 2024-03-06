@@ -28,7 +28,7 @@ const fileStorage = multer.diskStorage({
 
 //get user by id
 route.get("/getUser",async (req,res)=>{
-    const userData = await user.findById(req.query.id)
+    const userData = await user.findById(req.query.id).populate("posts").populate("follwing").populate("follwers")
     res.status(200).json(userData)
 })
 
@@ -36,7 +36,7 @@ route.get("/getUser",async (req,res)=>{
 route.get("/getSuggested" , async (req,res)=>{
     const userData = await user.findById(req.query.id)
     const following = userData.follwing.map(id => id.toString())
-    const users = await user.find()
+    const users = await user.find().populate("posts").populate("follwing").populate("follwers")
     const suggested = users.filter(user => !following.includes(user._id.toString()) && user._id.toString() !== req.query.id)
     res.status(200).json(suggested)
 })
@@ -50,7 +50,6 @@ route.put("/follow",async (req,res)=>{
 
 //unfollow
 route.put("/unfollow",async (req,res)=>{
-  console.log(req.body)
     const follower = await user.findByIdAndUpdate(req.body.following,{$pull:{follwers:req.body.follower}})
     const follwing = await user.findByIdAndUpdate(req.body.follower,{$pull:{follwing:req.body.following}})
     res.status(200).json(follwing)
