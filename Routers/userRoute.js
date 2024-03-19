@@ -87,8 +87,11 @@ route.get("/getOnePost",async (req,res)=>{
 //like
 route.put("/like",async (req,res)=>{
   const {user} = req.body
-  const postData = await post.findByIdAndUpdate(req.body.post,{$push:{likes:user}})
-  res.status(200).json(postData)
+  const postData = await post.findById(req.body.post)
+  if(!postData.likes.includes(user)){
+    const postData2 = await post.findByIdAndUpdate(req.body.post,{$push:{likes:user}})
+    res.status(200).json(postData2)
+  }
 })
 
 //unlike
