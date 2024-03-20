@@ -165,4 +165,12 @@ route.get("/explore", async (req,res)=>{
   });
   res.status(200).json(postData)
 })
+// delete post
+route.delete("/delete",async (req,res)=>{
+  console.log(req.query)
+  const userData = await user.findByIdAndUpdate(req.query.user,{$pull:{posts:req.query.post}})
+  const postData = await post.findByIdAndDelete(req.query.post)
+  res.status(200).json(postData)
+})
+
 module.exports = route;
