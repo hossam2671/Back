@@ -167,10 +167,15 @@ route.get("/explore", async (req,res)=>{
 })
 // delete post
 route.delete("/delete",async (req,res)=>{
-  console.log(req.query)
   const userData = await user.findByIdAndUpdate(req.query.user,{$pull:{posts:req.query.post}})
   const postData = await post.findByIdAndDelete(req.query.post)
   res.status(200).json(postData)
+})
+
+//edit post
+route.put("/editPost" , async (req,res)=>{
+  const postdata = await post.findByIdAndUpdate(req.body.post,{content:req.body.content})
+  res.status(200).json(postdata)
 })
 
 module.exports = route;
