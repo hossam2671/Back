@@ -179,6 +179,7 @@ route.put("/editPost" , async (req,res)=>{
 })
 // get user Posts based on engagements
 route.get("/getTopPosts" , async (req,res)=>{
+  console.log(req.query)
   const userData = await user.findById(req.query.id)
   const postData = await Promise.all(userData.posts.map(postId => post.findById(postId)));
   postData.sort((b , a) => new Date(a.date) - new Date(b.date));
