@@ -233,4 +233,16 @@ route.get("/getTopPosts", async (req, res) => {
   res.status(200).json(postData);
 });
 
+//get user Post
+route.get("/userPosts", async (req,res)=>{
+  const userData = await user.findById(req.query.id).populate("posts")
+  res.status(200).json(userData.posts)
+})
+//get user Saved Post
+route.get("/userSavedPosts", async (req,res)=>{
+  const userData = await user.findById(req.query.id).populate("saved")
+  res.status(200).json(userData.saved)
+})
+
+
 module.exports = route;
