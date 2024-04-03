@@ -8,6 +8,7 @@ const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
 
+
 //middlewares
 route.use(express.static(path.join(__dirname, "./upload")));
 route.use(express.static("./upload"));
@@ -242,6 +243,17 @@ route.get("/userPosts", async (req,res)=>{
 route.get("/userSavedPosts", async (req,res)=>{
   const userData = await user.findById(req.query.id).populate("saved")
   res.status(200).json(userData.saved)
+})
+
+// get followed by
+route.get("/followedBy" , async (req,res)=>{
+  const myData = await user.findById(req.query.mine).populate("follwing")
+  const userData = await user.findById(req.query.user).populate("follwers")
+  const myFollowingIds = myData.follwing.map(following => following._id.toString())
+  const userDataFollowersIds = userData.follwers.map(follower => follower._id.toString())
+  const mutualIds = userDataFollowersIds.filter(id => myFollowingIds.includes(id))
+  const mutualFollowers = userData.follwers.filter(follower=>mutualIds.includes(follower._id.toString()))
+  res.status(200).json(mutualFollowers)
 })
 
 
