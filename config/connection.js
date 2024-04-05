@@ -1,8 +1,13 @@
-const mongoose = require('mongoose')
-mongoose.connect('mongodb://127.0.0.1:27017/instagram')
-.then(() => {
-  console.log('Connected to MongoDB');
-})
-.catch((error) => {
-  console.error('Error connecting to MongoDB', error);
-});
+require('dotenv').config();
+
+const mongoose = require('mongoose');
+const { MONGODB_URI } = process.env;
+
+mongoose.connect(MONGODB_URI)
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB', error);
+  });
+
