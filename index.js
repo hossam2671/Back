@@ -20,6 +20,7 @@ app.use("/auth", authRoute);
 const userRoute = require("./Routers/userRoute");
 app.use("/user", userRoute);
 
-server.listen(5000, function () {
-  console.log("listen");
+const port = process.env.PORT || 5000;
+server.listen(port, function () {
+  console.log("Server is running on port " + port);
 });
