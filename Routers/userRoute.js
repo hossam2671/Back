@@ -8,11 +8,14 @@ const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
 const cloudinary = require('cloudinary').v2
+require('dotenv').config();
+
+const { CLOUD_NAME , API_KEY , API_SECRET } = process.env;
 
 cloudinary.config({ 
-  cloud_name: 'dmgtca6qs', 
-  api_key: '376831533254551', 
-  api_secret: 'sJis43BySqFAXwkhc0ihw2_vvhs'
+  cloud_name: CLOUD_NAME, 
+  api_key: API_KEY, 
+  api_secret: API_SECRET
 });
 
 
