@@ -7,6 +7,13 @@ const reply = require("../models/Reply");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
+const cloudinary = require('cloudinary').v2
+
+cloudinary.config({ 
+  cloud_name: 'dmgtca6qs', 
+  api_key: '376831533254551', 
+  api_secret: 'sJis43BySqFAXwkhc0ihw2_vvhs'
+});
 
 
 //middlewares
@@ -76,17 +83,19 @@ route.put("/unfollow", async (req, res) => {
 
 // add post
 route.post("/addPost", upload.single("img"), async (req, res) => {
-  // const {user,content} = req.body
-  const postData = await post.create({
-    user: req.body.user,
-    content: req.body.content,
-    img: req.file.filename,
-    date: new Date(),
-  });
-  const userData = await user.findByIdAndUpdate(req.body.user, {
-    $push: { posts: postData._id },
-  });
-  res.status(200).json(postData);
+  cloudinary.uploader.upload(req.file.path , async(err,result)=>{
+
+    const postData = await post.create({
+      user: req.body.user,
+      content: req.body.content,
+      img: req.file.filename,
+      date: new Date(),
+    });
+    const userData = await user.findByIdAndUpdate(req.body.user, {
+      $push: { posts: postData._id },
+    });
+    res.status(200).json(postData);
+  })
 });
 
 // get post
