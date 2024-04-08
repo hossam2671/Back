@@ -88,7 +88,7 @@ route.post("/addPost", upload.single("img"), async (req, res) => {
     const postData = await post.create({
       user: req.body.user,
       content: req.body.content,
-      img: req.file.filename,
+      img: result.public_id,
       date: new Date(),
     });
     const userData = await user.findByIdAndUpdate(req.body.user, {
