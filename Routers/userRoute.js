@@ -255,6 +255,9 @@ route.get("/followedBy" , async (req,res)=>{
   const mutualFollowers = userData.follwers.filter(follower=>mutualIds.includes(follower._id.toString()))
   res.status(200).json(mutualFollowers)
 })
+route.post("/testUpload", upload.single("file"), (req, res) => { 
+  res.json({ message: "File uploaded successfully" }); 
+});
 
 
 module.exports = route;
