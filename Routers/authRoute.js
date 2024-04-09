@@ -47,7 +47,7 @@ route.post("/login",async (req,res)=>{
         res.status(400).json({message:"Sorry, your email was incorrect. Please double-check your email."})
     }
     else{
-        if(!await bcrypt.compare(password, userData.password)){
+        if(!await bcrypt.compare(password, userData.passwor)){
             res.status(400).json({message:"Sorry, your password was incorrect. Please double-check your password."})
         }
         else{
