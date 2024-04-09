@@ -30,7 +30,7 @@ const userSchema = mongoose.Schema(
       },
     ],
     joinedAt:Date,
-    img:{type: String, default:"default.png"},
+    img:{type: String, default:"yvxiyhwzugcjcoaaevcy"},
     bio:String,
     gender:{
         type:String,
